@@ -35,7 +35,6 @@ var CodePayload = Type("CodePayload", func() {
 	Field(2, "code", String, "HMRC string to identify client")
 })
 
-
 var ErrorPayload = Type("ErrorPayload", func() {
 	Field(1, "state", String, "AES1 digest string to identify client")
 })
@@ -86,6 +85,7 @@ var _ = Service("mtd", func() {
 	Method("hmrc_callback", func() {
 		Description("Authentication code response")
 		Payload(CodePayload)
+		Payload(ErrorPayload)
 		HTTP(func() {
 			POST("/")
 			Params(func() {
