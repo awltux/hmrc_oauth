@@ -1,0 +1,23 @@
+.PHONY generate
+
+# Generate service API code
+generate: 
+	goa gen 'github.com/awltux/hmrc_oath/design'
+
+
+# Generate application code
+#example:
+#	goa example github.com/awltux/hmrc_oath/design
+
+# Build the code
+#start:
+#	pushd cmd/mtd_server; \
+#	go build; \
+#	./mtd_server; \
+#	popd;
+
+#cli:
+#	pushd cmd/mtd_server-cli; \
+#	go build; \
+#	./mtd_server-cli --help;
+
