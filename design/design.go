@@ -11,16 +11,16 @@ var _ = API("hmrc", func() {
 	Title("Shim for HRMRC oAuth API")
 	Description("Provides known address for HMRC oAuth API to reply to.")
 	Server("mtdServer", func() {
-		Host("production", func() {
+		Host("prod", func() {
 			Description("Deployed in AWS")
-			URI("https://v1.hmrc.awltux.trade/mtd")
+			URI("https://hmrc.awltux.trade/v1/mtd")
 			Variable("version", String, "API version", func() {
 				Default("v1")
 			})
 		})
-		Host("development", func() {
+		Host("dev", func() {
 			Description("Development hosts.")
-			URI("http://localhost/mtd")
+			URI("http://localhost:8088/v1/mtd")
 		})
 	})
 
@@ -30,18 +30,18 @@ var StatePayload = Type("StatePayload", func() {
 	Field(1, "state", String, "AES1 digest string to identify client")
 })
 
+// CodePayload is the code/state
 var CodePayload = Type("CodePayload", func() {
 	Field(1, "state", String, "AES1 digest string to identify client")
 	Field(2, "code", String, "HMRC string to identify client")
-})
-
-var ErrorPayload = Type("ErrorPayload", func() {
-	Field(1, "state", String, "AES1 digest string to identify client")
+	Field(3, "error", String, "Error String")
+	Field(4, "error_description", String, "Error String")
+	Field(5, "error_code", String, "Error String")
 })
 
 var _ = Service("mtd", func() {
 	HTTP(func() {
-		Path("/mtd")
+		Path("/v1/mtd")
 	})
 
 	Method("register", func() {
@@ -85,14 +85,12 @@ var _ = Service("mtd", func() {
 	Method("hmrc_callback", func() {
 		Description("Authentication code response")
 		Payload(CodePayload)
-		Payload(ErrorPayload)
 		HTTP(func() {
 			POST("/")
 			Params(func() {
 				// These are used only for success condition
 				Param("code", String, "Authorization code from HMRC; times out in 10 mins")
 				Param("state", String, "Key submitted by client to oAuth call; normally AES1 digest")
-				// These are used only for error condition
 				Param("error", String, "access_denied")
 				Param("error_description", String, "URL encoded error description")
 				Param("error_code", String, "HMRC code for the error")

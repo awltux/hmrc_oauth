@@ -5,6 +5,8 @@ import (
 	"log"
 
 	mtd "github.com/awltux/hmrc_oauth/gen/mtd"
+	memdb "github.com/hashicorp/go-memdb"
+
 )
 
 // mtd service example implementation.
