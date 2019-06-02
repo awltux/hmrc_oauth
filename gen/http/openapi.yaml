@@ -1,0 +1,100 @@
+swagger: "2.0"
+info:
+  title: Shim for HRMRC oAuth API
+  description: Provides known address for HMRC oAuth API to reply to.
+  version: ""
+host: hmrc.awltux.trade
+consumes:
+- application/json
+- application/xml
+- application/gob
+produces:
+- application/json
+- application/xml
+- application/gob
+paths:
+  /v1/mtd:
+    post:
+      tags:
+      - mtd
+      summary: hmrc_callback mtd
+      description: Authentication code response
+      operationId: mtd#hmrc_callback
+      parameters:
+      - name: code
+        in: query
+        description: Authorization code from HMRC; times out in 10 mins
+        required: false
+        type: string
+      - name: state
+        in: query
+        description: Key submitted by client to oAuth call; normally AES1 digest
+        required: false
+        type: string
+      - name: error
+        in: query
+        description: access_denied
+        required: false
+        type: string
+      - name: error_description
+        in: query
+        description: URL encoded error description
+        required: false
+        type: string
+      - name: error_code
+        in: query
+        description: HMRC code for the error
+        required: false
+        type: string
+      responses:
+        "200":
+          description: OK response.
+        "404":
+          description: Not Found response.
+      schemes:
+      - https
+  /v1/mtd/{state}:
+    get:
+      tags:
+      - mtd
+      summary: retrieve mtd
+      description: Store key that will store oauth token
+      operationId: mtd#retrieve
+      parameters:
+      - name: state
+        in: path
+        description: Key submitted to oAuth call; normally AES1 digest
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK response.
+        "204":
+          description: No Content response.
+        "401":
+          description: Unauthorized response.
+        "404":
+          description: Not Found response.
+      schemes:
+      - https
+    post:
+      tags:
+      - mtd
+      summary: register mtd
+      description: Store key that will store oauth token
+      operationId: mtd#register
+      parameters:
+      - name: state
+        in: path
+        description: Key submitted to oAuth call; normally AES1 digest
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Created response.
+        "401":
+          description: Unauthorized response.
+        "409":
+          description: Conflict response.
+      schemes:
+      - https

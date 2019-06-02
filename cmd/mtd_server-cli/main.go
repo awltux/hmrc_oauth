@@ -14,7 +14,7 @@ import (
 
 func main() {
 	var (
-		hostF = flag.String("host", "production", "Server host (valid values: production, development)")
+		hostF = flag.String("host", "prod", "Server host (valid values: prod, dev)")
 		addrF = flag.String("url", "", "URL to service host")
 
 		versionF = flag.String("version", "v1", "API version")
@@ -33,13 +33,13 @@ func main() {
 		addr = *addrF
 		if addr == "" {
 			switch *hostF {
-			case "production":
-				addr = "https://v1.hmrc.awltux.trade/mtd"
+			case "prod":
+				addr = "https://hmrc.awltux.trade/v1/mtd"
 				addr = strings.Replace(addr, "{version}", *versionF, -1)
-			case "development":
-				addr = "http://localhost/mtd"
+			case "dev":
+				addr = "http://localhost:8088/v1/mtd"
 			default:
-				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: production|development)", *hostF)
+				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: prod|dev)", *hostF)
 				os.Exit(1)
 			}
 		}
@@ -101,7 +101,7 @@ func usage() {
 Usage:
     %s [-host HOST][-url URL][-timeout SECONDS][-verbose|-v][-version VERSION] SERVICE ENDPOINT [flags]
 
-    -host HOST:  server host (production). valid values: production, development
+    -host HOST:  server host (prod). valid values: prod, dev
     -url URL:    specify service URL overriding host URL (http://localhost:8080)
     -timeout:    maximum number of seconds to wait for response (30)
     -verbose|-v: print request and response details (false)

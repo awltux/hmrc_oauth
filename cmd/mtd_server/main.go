@@ -19,7 +19,7 @@ func main() {
 	// Define command line flags, add any other flag required to configure the
 	// service.
 	var (
-		hostF     = flag.String("host", "production", "Server host (valid values: production, development)")
+		hostF     = flag.String("host", "prod", "Server host (valid values: prod, dev)")
 		domainF   = flag.String("domain", "", "Host domain name (overrides host domain specified in service design)")
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
 		versionF  = flag.String("version", "v1", "API version")
@@ -70,9 +70,9 @@ func main() {
 
 	// Start the servers and send errors (if any) to the error channel.
 	switch *hostF {
-	case "production":
+	case "prod":
 		{
-			addr := "https://v1.hmrc.awltux.trade/mtd"
+			addr := "https://hmrc.awltux.trade/v1/mtd"
 			addr = strings.Replace(addr, "{version}", *versionF, -1)
 			u, err := url.Parse(addr)
 			if err != nil {
@@ -94,9 +94,9 @@ func main() {
 			handleHTTPServer(ctx, u, mtdEndpoints, &wg, errc, logger, *dbgF)
 		}
 
-	case "development":
+	case "dev":
 		{
-			addr := "http://localhost/mtd"
+			addr := "http://localhost:8088/v1/mtd"
 			u, err := url.Parse(addr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s", addr, err)
@@ -118,7 +118,7 @@ func main() {
 		}
 
 	default:
-		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: production|development)", *hostF)
+		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: prod|dev)", *hostF)
 	}
 
 	// Wait for signal.
