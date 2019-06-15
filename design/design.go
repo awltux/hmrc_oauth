@@ -40,6 +40,13 @@ var CodePayload = Type("CodePayload", func() {
 })
 
 var _ = Service("mtd", func() {
+	Error("key_length_error")
+	Error("key_already_exists")
+	Error("key_ip_mismatch")
+	Error("key_has_no_token")
+	Error("matching_key_not_found")
+	Error("invalid_request")
+
 	HTTP(func() {
 		Path("/v1/mtd")
 	})
@@ -55,9 +62,11 @@ var _ = Service("mtd", func() {
 			// New key added
 			Response(StatusCreated)
 			// Key already exists
-			Response(StatusConflict)
+			Response("key_length_error", StatusPreconditionFailed)
+			Response("key_already_exists", StatusConflict)
 			// Key already registered by another client
-			Response(StatusUnauthorized)
+			Response("key_ip_mismatch", StatusUnauthorized)
+
 		})
 
 	})
@@ -65,6 +74,7 @@ var _ = Service("mtd", func() {
 	Method("retrieve", func() {
 		Description("Store key that will store oauth token")
 		Payload(StatePayload)
+		Result(String, "Token from HMRC oAuth")
 		HTTP(func() {
 			GET("/{state}")
 			Params(func() {
@@ -72,12 +82,14 @@ var _ = Service("mtd", func() {
 			})
 			// Token has been returned
 			Response(StatusOK)
+			Response("invalid_request", StatusBadRequest)
 			// Key exists, but no token added yet
-			Response(StatusNoContent)
+			Response("key_has_no_token", StatusPartialContent)
 			// Key was registered by a different IP
-			Response(StatusUnauthorized)
+			Response("key_ip_mismatch", StatusUnauthorized)
 			// No key by that name
-			Response(StatusNotFound)
+			Response("matching_key_not_found", StatusNotFound)
+
 		})
 
 	})
@@ -86,7 +98,7 @@ var _ = Service("mtd", func() {
 		Description("Authentication code response")
 		Payload(CodePayload)
 		HTTP(func() {
-			POST("/")
+			POST("")
 			Params(func() {
 				// These are used only for success condition
 				Param("code", String, "Authorization code from HMRC; times out in 10 mins")
@@ -98,7 +110,10 @@ var _ = Service("mtd", func() {
 			// Token added successfully
 			Response(StatusOK)
 			// No Key by that name; may have timed out
-			Response(StatusNotFound)
+			Response("matching_key_not_found", StatusNotFound)
+			Response("invalid_request", StatusBadRequest)
+			Response("key_length_error", StatusPreconditionFailed)
+
 		})
 
 	})
