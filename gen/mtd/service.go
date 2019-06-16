@@ -9,6 +9,8 @@ package mtd
 
 import (
 	"context"
+
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Service is the mtd service interface.
@@ -16,7 +18,7 @@ type Service interface {
 	// Store key that will store oauth token
 	Register(context.Context, *StatePayload) (err error)
 	// Store key that will store oauth token
-	Retrieve(context.Context, *StatePayload) (err error)
+	Retrieve(context.Context, *StatePayload) (res string, err error)
 	// Authentication code response
 	HmrcCallback(context.Context, *CodePayload) (err error)
 }
@@ -49,4 +51,58 @@ type CodePayload struct {
 	ErrorDescription *string
 	// Error String
 	ErrorCode *string
+}
+
+// MakeKeyLengthError builds a goa.ServiceError from an error.
+func MakeKeyLengthError(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "key_length_error",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeKeyAlreadyExists builds a goa.ServiceError from an error.
+func MakeKeyAlreadyExists(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "key_already_exists",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeKeyIPMismatch builds a goa.ServiceError from an error.
+func MakeKeyIPMismatch(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "key_ip_mismatch",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeKeyHasNoToken builds a goa.ServiceError from an error.
+func MakeKeyHasNoToken(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "key_has_no_token",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeMatchingKeyNotFound builds a goa.ServiceError from an error.
+func MakeMatchingKeyNotFound(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "matching_key_not_found",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeInvalidRequest builds a goa.ServiceError from an error.
+func MakeInvalidRequest(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "invalid_request",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
 }

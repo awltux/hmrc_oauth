@@ -48,6 +48,11 @@ func (c *Client) BuildRegisterRequest(ctx context.Context, v interface{}) (*http
 // DecodeRegisterResponse returns a decoder for responses returned by the mtd
 // register endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
+// DecodeRegisterResponse may return the following errors:
+//	- "key_length_error" (type *goa.ServiceError): http.StatusPreconditionFailed
+//	- "key_already_exists" (type *goa.ServiceError): http.StatusConflict
+//	- "key_ip_mismatch" (type *goa.ServiceError): http.StatusUnauthorized
+//	- error: internal error
 func DecodeRegisterResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -65,6 +70,48 @@ func DecodeRegisterResponse(decoder func(*http.Response) goahttp.Decoder, restor
 		switch resp.StatusCode {
 		case http.StatusCreated:
 			return nil, nil
+		case http.StatusPreconditionFailed:
+			var (
+				body RegisterKeyLengthErrorResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "register", err)
+			}
+			err = ValidateRegisterKeyLengthErrorResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "register", err)
+			}
+			return nil, NewRegisterKeyLengthError(&body)
+		case http.StatusConflict:
+			var (
+				body RegisterKeyAlreadyExistsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "register", err)
+			}
+			err = ValidateRegisterKeyAlreadyExistsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "register", err)
+			}
+			return nil, NewRegisterKeyAlreadyExists(&body)
+		case http.StatusUnauthorized:
+			var (
+				body RegisterKeyIPMismatchResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "register", err)
+			}
+			err = ValidateRegisterKeyIPMismatchResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "register", err)
+			}
+			return nil, NewRegisterKeyIPMismatch(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("mtd", "register", resp.StatusCode, string(body))
@@ -102,6 +149,12 @@ func (c *Client) BuildRetrieveRequest(ctx context.Context, v interface{}) (*http
 // DecodeRetrieveResponse returns a decoder for responses returned by the mtd
 // retrieve endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
+// DecodeRetrieveResponse may return the following errors:
+//	- "invalid_request" (type *goa.ServiceError): http.StatusBadRequest
+//	- "key_has_no_token" (type *goa.ServiceError): http.StatusPartialContent
+//	- "key_ip_mismatch" (type *goa.ServiceError): http.StatusUnauthorized
+//	- "matching_key_not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- error: internal error
 func DecodeRetrieveResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -118,7 +171,71 @@ func DecodeRetrieveResponse(decoder func(*http.Response) goahttp.Decoder, restor
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
-			return nil, nil
+			var (
+				body string
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "retrieve", err)
+			}
+			return body, nil
+		case http.StatusBadRequest:
+			var (
+				body RetrieveInvalidRequestResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "retrieve", err)
+			}
+			err = ValidateRetrieveInvalidRequestResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "retrieve", err)
+			}
+			return nil, NewRetrieveInvalidRequest(&body)
+		case http.StatusPartialContent:
+			var (
+				body RetrieveKeyHasNoTokenResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "retrieve", err)
+			}
+			err = ValidateRetrieveKeyHasNoTokenResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "retrieve", err)
+			}
+			return nil, NewRetrieveKeyHasNoToken(&body)
+		case http.StatusUnauthorized:
+			var (
+				body RetrieveKeyIPMismatchResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "retrieve", err)
+			}
+			err = ValidateRetrieveKeyIPMismatchResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "retrieve", err)
+			}
+			return nil, NewRetrieveKeyIPMismatch(&body)
+		case http.StatusNotFound:
+			var (
+				body RetrieveMatchingKeyNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "retrieve", err)
+			}
+			err = ValidateRetrieveMatchingKeyNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "retrieve", err)
+			}
+			return nil, NewRetrieveMatchingKeyNotFound(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("mtd", "retrieve", resp.StatusCode, string(body))
@@ -173,6 +290,11 @@ func EncodeHmrcCallbackRequest(encoder func(*http.Request) goahttp.Encoder) func
 // DecodeHmrcCallbackResponse returns a decoder for responses returned by the
 // mtd hmrc_callback endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
+// DecodeHmrcCallbackResponse may return the following errors:
+//	- "matching_key_not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "invalid_request" (type *goa.ServiceError): http.StatusBadRequest
+//	- "key_length_error" (type *goa.ServiceError): http.StatusPreconditionFailed
+//	- error: internal error
 func DecodeHmrcCallbackResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -190,6 +312,48 @@ func DecodeHmrcCallbackResponse(decoder func(*http.Response) goahttp.Decoder, re
 		switch resp.StatusCode {
 		case http.StatusOK:
 			return nil, nil
+		case http.StatusNotFound:
+			var (
+				body HmrcCallbackMatchingKeyNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "hmrc_callback", err)
+			}
+			err = ValidateHmrcCallbackMatchingKeyNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "hmrc_callback", err)
+			}
+			return nil, NewHmrcCallbackMatchingKeyNotFound(&body)
+		case http.StatusBadRequest:
+			var (
+				body HmrcCallbackInvalidRequestResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "hmrc_callback", err)
+			}
+			err = ValidateHmrcCallbackInvalidRequestResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "hmrc_callback", err)
+			}
+			return nil, NewHmrcCallbackInvalidRequest(&body)
+		case http.StatusPreconditionFailed:
+			var (
+				body HmrcCallbackKeyLengthErrorResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mtd", "hmrc_callback", err)
+			}
+			err = ValidateHmrcCallbackKeyLengthErrorResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("mtd", "hmrc_callback", err)
+			}
+			return nil, NewHmrcCallbackKeyLengthError(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("mtd", "hmrc_callback", resp.StatusCode, string(body))

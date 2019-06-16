@@ -29,7 +29,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` mtd register --state "Unde dicta rerum facere."` + "\n" +
+	return os.Args[0] + ` mtd register --state "Sint neque."` + "\n" +
 		""
 }
 
@@ -172,7 +172,7 @@ Store key that will store oauth token
     -state STRING: Key submitted to oAuth call; normally AES1 digest
 
 Example:
-    `+os.Args[0]+` mtd register --state "Unde dicta rerum facere."
+    `+os.Args[0]+` mtd register --state "Sint neque."
 `, os.Args[0])
 }
 
@@ -183,7 +183,7 @@ Store key that will store oauth token
     -state STRING: Key submitted to oAuth call; normally AES1 digest
 
 Example:
-    `+os.Args[0]+` mtd retrieve --state "Minima quaerat aut similique voluptas non ea."
+    `+os.Args[0]+` mtd retrieve --state "Culpa culpa labore iure ipsum."
 `, os.Args[0])
 }
 
@@ -198,6 +198,6 @@ Authentication code response
     -error-code STRING: 
 
 Example:
-    `+os.Args[0]+` mtd hmrc-callback --code "Aut saepe dolor est." --state "Et in culpa." --error "Labore iure." --error-description "Non qui." --error-code "Eius illum amet."
+    `+os.Args[0]+` mtd hmrc-callback --code "Distinctio nisi." --state "Eos eos necessitatibus." --error "Velit praesentium molestias ipsa tenetur consequatur quae." --error-description "Provident quos illum iure." --error-code "Nam nulla et similique corporis iste."
 `, os.Args[0])
 }

@@ -1,3 +1,4 @@
+# Server profile to start with: [dev], prod
 host?=dev
 state?=0123456789012345678901234567890123456789
 token?=9876543210987654321098765432109876543210
@@ -37,6 +38,28 @@ git-config:
 	git config color.ui true && \
 	git config credential.helper store;
 
+define GOLANG_PROFILE
+#!/bin/bash
+
+export GOROOT=/usr/local/go
+export GOPATH=~/go
+
+export PATH=$$PATH:/usr/local/go/bin:~/go/bin
+export GO111MODULE=on
+endef
+
+export GOLANG_PROFILE
+go-init:
+	#Install goLang
+	# Preparing Your Environment For Go Development
+	# https://golang.org/dl/
+	curl -o /tmp/go.tgz https://dl.google.com/go/go1.12.5.linux-amd64.tar.gz
+	sudo mkdir -p /usr/local
+	sudo tar -C /usr/local -zxvf /tmp/go.tgz
+	sudo bash -c "echo \"$${GOLANG_PROFILE}\" > /etc/profile.d/golang.sh"
+	sudo chmod 755 /etc/profile.d/golang.sh
+
+
 # Install the goa libraries and command
 # WARNING: May need to be run a few times to get all the dependencies downloaded.
 goa-init: 
@@ -47,7 +70,7 @@ goa-init:
 # Generate service API code from the design directory
 goa-gen: rsync
 	export GO111MODULE=on && \
-	goa gen $(repo_path)/design
+	goa gen  $(repo_path)/design
 
 # Generate example application and client code from the design directory
 goa-example: rsync
@@ -77,6 +100,7 @@ test-all: goa-build goa-server-start
 	      httpCode=$(shell curl $(printHttpCode) \
 	          -X GET http://localhost:8088/v1/mtd/);  \
 				echo "Waiting for server to start"; \
+				sleep 1; \
 				done;
 	@httpCode=$(shell curl $(printHttpCode) \
 	      -X GET http://localhost:8088/v1/mtd/); \

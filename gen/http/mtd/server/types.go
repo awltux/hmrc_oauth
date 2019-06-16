@@ -9,7 +9,330 @@ package server
 
 import (
 	mtd "github.com/awltux/hmrc_oauth/gen/mtd"
+	goa "goa.design/goa/v3/pkg"
 )
+
+// RegisterKeyLengthErrorResponseBody is the type of the "mtd" service
+// "register" endpoint HTTP response body for the "key_length_error" error.
+type RegisterKeyLengthErrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// RegisterKeyAlreadyExistsResponseBody is the type of the "mtd" service
+// "register" endpoint HTTP response body for the "key_already_exists" error.
+type RegisterKeyAlreadyExistsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// RegisterKeyIPMismatchResponseBody is the type of the "mtd" service
+// "register" endpoint HTTP response body for the "key_ip_mismatch" error.
+type RegisterKeyIPMismatchResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// RetrieveInvalidRequestResponseBody is the type of the "mtd" service
+// "retrieve" endpoint HTTP response body for the "invalid_request" error.
+type RetrieveInvalidRequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// RetrieveKeyHasNoTokenResponseBody is the type of the "mtd" service
+// "retrieve" endpoint HTTP response body for the "key_has_no_token" error.
+type RetrieveKeyHasNoTokenResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// RetrieveKeyIPMismatchResponseBody is the type of the "mtd" service
+// "retrieve" endpoint HTTP response body for the "key_ip_mismatch" error.
+type RetrieveKeyIPMismatchResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// RetrieveMatchingKeyNotFoundResponseBody is the type of the "mtd" service
+// "retrieve" endpoint HTTP response body for the "matching_key_not_found"
+// error.
+type RetrieveMatchingKeyNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// HmrcCallbackMatchingKeyNotFoundResponseBody is the type of the "mtd" service
+// "hmrc_callback" endpoint HTTP response body for the "matching_key_not_found"
+// error.
+type HmrcCallbackMatchingKeyNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// HmrcCallbackInvalidRequestResponseBody is the type of the "mtd" service
+// "hmrc_callback" endpoint HTTP response body for the "invalid_request" error.
+type HmrcCallbackInvalidRequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// HmrcCallbackKeyLengthErrorResponseBody is the type of the "mtd" service
+// "hmrc_callback" endpoint HTTP response body for the "key_length_error" error.
+type HmrcCallbackKeyLengthErrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// NewRegisterKeyLengthErrorResponseBody builds the HTTP response body from the
+// result of the "register" endpoint of the "mtd" service.
+func NewRegisterKeyLengthErrorResponseBody(res *goa.ServiceError) *RegisterKeyLengthErrorResponseBody {
+	body := &RegisterKeyLengthErrorResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewRegisterKeyAlreadyExistsResponseBody builds the HTTP response body from
+// the result of the "register" endpoint of the "mtd" service.
+func NewRegisterKeyAlreadyExistsResponseBody(res *goa.ServiceError) *RegisterKeyAlreadyExistsResponseBody {
+	body := &RegisterKeyAlreadyExistsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewRegisterKeyIPMismatchResponseBody builds the HTTP response body from the
+// result of the "register" endpoint of the "mtd" service.
+func NewRegisterKeyIPMismatchResponseBody(res *goa.ServiceError) *RegisterKeyIPMismatchResponseBody {
+	body := &RegisterKeyIPMismatchResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewRetrieveInvalidRequestResponseBody builds the HTTP response body from the
+// result of the "retrieve" endpoint of the "mtd" service.
+func NewRetrieveInvalidRequestResponseBody(res *goa.ServiceError) *RetrieveInvalidRequestResponseBody {
+	body := &RetrieveInvalidRequestResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewRetrieveKeyHasNoTokenResponseBody builds the HTTP response body from the
+// result of the "retrieve" endpoint of the "mtd" service.
+func NewRetrieveKeyHasNoTokenResponseBody(res *goa.ServiceError) *RetrieveKeyHasNoTokenResponseBody {
+	body := &RetrieveKeyHasNoTokenResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewRetrieveKeyIPMismatchResponseBody builds the HTTP response body from the
+// result of the "retrieve" endpoint of the "mtd" service.
+func NewRetrieveKeyIPMismatchResponseBody(res *goa.ServiceError) *RetrieveKeyIPMismatchResponseBody {
+	body := &RetrieveKeyIPMismatchResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewRetrieveMatchingKeyNotFoundResponseBody builds the HTTP response body
+// from the result of the "retrieve" endpoint of the "mtd" service.
+func NewRetrieveMatchingKeyNotFoundResponseBody(res *goa.ServiceError) *RetrieveMatchingKeyNotFoundResponseBody {
+	body := &RetrieveMatchingKeyNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewHmrcCallbackMatchingKeyNotFoundResponseBody builds the HTTP response body
+// from the result of the "hmrc_callback" endpoint of the "mtd" service.
+func NewHmrcCallbackMatchingKeyNotFoundResponseBody(res *goa.ServiceError) *HmrcCallbackMatchingKeyNotFoundResponseBody {
+	body := &HmrcCallbackMatchingKeyNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewHmrcCallbackInvalidRequestResponseBody builds the HTTP response body from
+// the result of the "hmrc_callback" endpoint of the "mtd" service.
+func NewHmrcCallbackInvalidRequestResponseBody(res *goa.ServiceError) *HmrcCallbackInvalidRequestResponseBody {
+	body := &HmrcCallbackInvalidRequestResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewHmrcCallbackKeyLengthErrorResponseBody builds the HTTP response body from
+// the result of the "hmrc_callback" endpoint of the "mtd" service.
+func NewHmrcCallbackKeyLengthErrorResponseBody(res *goa.ServiceError) *HmrcCallbackKeyLengthErrorResponseBody {
+	body := &HmrcCallbackKeyLengthErrorResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
 
 // NewRegisterStatePayload builds a mtd service register endpoint payload.
 func NewRegisterStatePayload(state string) *mtd.StatePayload {

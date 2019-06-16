@@ -36,9 +36,13 @@ func (c *Client) Register(ctx context.Context, p *StatePayload) (err error) {
 }
 
 // Retrieve calls the "retrieve" endpoint of the "mtd" service.
-func (c *Client) Retrieve(ctx context.Context, p *StatePayload) (err error) {
-	_, err = c.RetrieveEndpoint(ctx, p)
-	return
+func (c *Client) Retrieve(ctx context.Context, p *StatePayload) (res string, err error) {
+	var ires interface{}
+	ires, err = c.RetrieveEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(string), nil
 }
 
 // HmrcCallback calls the "hmrc_callback" endpoint of the "mtd" service.

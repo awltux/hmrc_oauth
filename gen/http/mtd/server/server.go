@@ -102,7 +102,7 @@ func NewRegisterHandler(
 	var (
 		decodeRequest  = DecodeRegisterRequest(mux, dec)
 		encodeResponse = EncodeRegisterResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		encodeError    = EncodeRegisterError(enc)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -154,7 +154,7 @@ func NewRetrieveHandler(
 	var (
 		decodeRequest  = DecodeRetrieveRequest(mux, dec)
 		encodeResponse = EncodeRetrieveResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		encodeError    = EncodeRetrieveError(enc)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -206,7 +206,7 @@ func NewHmrcCallbackHandler(
 	var (
 		decodeRequest  = DecodeHmrcCallbackRequest(mux, dec)
 		encodeResponse = EncodeHmrcCallbackResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		encodeError    = EncodeHmrcCallbackError(enc)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))

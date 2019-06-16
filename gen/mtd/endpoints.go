@@ -50,7 +50,7 @@ func NewRegisterEndpoint(s Service) goa.Endpoint {
 func NewRetrieveEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*StatePayload)
-		return nil, s.Retrieve(ctx, p)
+		return s.Retrieve(ctx, p)
 	}
 }
 
