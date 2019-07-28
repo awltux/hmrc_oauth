@@ -4,7 +4,7 @@ package design
 // https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/user-restricted-endpoints
 
 import (
-	. "goa.design/goa/v3/dsl"
+	. "github.com/awltux/goa"
 )
 
 var _ = API("hmrc", func() {
